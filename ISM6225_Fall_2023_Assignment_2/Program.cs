@@ -6,6 +6,7 @@ WRITE YOUR CODE IN THE RESPECTIVE QUESTION FUNCTION BLOCK
 
 */
 
+using System.Diagnostics;
 using System.Text;
 
 namespace ISM6225_Fall_2023_Assignment_2
@@ -112,7 +113,23 @@ namespace ISM6225_Fall_2023_Assignment_2
         {
             try
             {
-                // Write your code here and you can modify the return value according to the requirements
+                List<IList<int>> missingRanges = new List<IList<int>>();
+
+                int prev = lower - 1;
+
+                for (int i = 0; i <= nums.Length; i++)
+                {
+                    int curr = (i < nums.Length) ? nums[i] : upper + 1;
+
+                    if (curr - prev >= 2)
+                    {
+                        missingRanges.Add(new List<int> { prev + 1, curr - 1 });
+                    }
+
+                    prev = curr;
+                }
+
+                return missingRanges;
                 return new List<IList<int>>();
             }
             catch (Exception)
@@ -156,8 +173,39 @@ namespace ISM6225_Fall_2023_Assignment_2
         {
             try
             {
-                // Write your code here and you can modify the return value according to the requirements
-                return s.Length == 0;
+                Stack<char> stack = new Stack<char>();
+
+                foreach (char c in s)
+                {
+                    if (c == '(' || c == '{' || c == '[')
+                    {
+                        stack.Push(c);
+                    }
+                    else
+                    {
+                        if (stack.Count == 0)
+                        {
+                            return false;
+                        }
+
+                        char top = stack.Pop();
+                        if (c == ')' && top != '(')
+                        {
+                            return false;
+                        }
+                        if (c == '}' && top != '{')
+                        {
+                            return false;
+                        }
+                        if (c == ']' && top != '[')
+                        {
+                            return false;
+                        }
+                    }
+                }
+
+                return stack.Count == 0;
+
             }
             catch (Exception)
             {
@@ -191,8 +239,23 @@ namespace ISM6225_Fall_2023_Assignment_2
         {
             try
             {
-                // Write your code here and you can modify the return value according to the requirements
-                return 1;
+                int maxProfit = 0;
+                int minPrice = Int32.MaxValue;
+
+                for (int i = 0; i < prices.Length; i++)
+                {
+                    if (prices[i] < minPrice)
+                    {
+                        minPrice = prices[i];
+                    }
+                    else if (prices[i] - minPrice > maxProfit)
+                    {
+                        maxProfit = prices[i] - minPrice;
+                    }
+                }
+
+                return maxProfit;
+
             }
             catch (Exception)
             {
@@ -229,8 +292,35 @@ namespace ISM6225_Fall_2023_Assignment_2
         {
             try
             {
-                // Write your code here and you can modify the return value according to the requirements
-                return false;
+                string validChars = "01869";
+                int left = 0;
+                int right = s.Length - 1;
+
+                while (left <= right)
+                {
+                    if (!validChars.Contains(s[left]) || !validChars.Contains(s[right]))
+                    {
+                        return false;
+                    }
+
+                    if (s[left] == '6' && s[right] == '9' || s[left] == '9' && s[right] == '6')
+                    {
+                        left++;
+                        right--;
+                    }
+                    else if (s[left] == s[right])
+                    {
+                        left++;
+                        right--;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+
+                return true;
+
             }
             catch (Exception)
             {
@@ -271,8 +361,25 @@ namespace ISM6225_Fall_2023_Assignment_2
         {
             try
             {
-                // Write your code here and you can modify the return value according to the requirements
-                return 0;
+                Dictionary<int, int> count = new Dictionary<int, int>();
+                int numPairs = 0;
+
+                foreach (int num in nums)
+                {
+                    if (count.ContainsKey(num))
+                    {
+                        numPairs += count[num];
+                        count[num]++;
+                    }
+                    else
+                    {
+                        count[num] = 1;
+                    }
+                }
+
+                return numPairs;
+
+
             }
             catch (Exception)
             {
@@ -321,8 +428,38 @@ namespace ISM6225_Fall_2023_Assignment_2
         {
             try
             {
-                // Write your code here and you can modify the return value according to the requirements
-                return 0;
+                long firstMax = long.MinValue;
+                long secondMax = long.MinValue;
+                long thirdMax = long.MinValue;
+
+                foreach (int num in nums)
+                {
+                    if (num > firstMax)
+                    {
+                        thirdMax = secondMax;
+                        secondMax = firstMax;
+                        firstMax = num;
+                    }
+                    else if (num < firstMax && num > secondMax)
+                    {
+                        thirdMax = secondMax;
+                        secondMax = num;
+                    }
+                    else if (num < secondMax && num > thirdMax)
+                    {
+                        thirdMax = num;
+                    }
+                }
+
+                if (thirdMax != long.MinValue)
+                {
+                    return (int)thirdMax;
+                }
+                else
+                {
+                    return (int)firstMax;
+                }
+
             }
             catch (Exception)
             {
@@ -354,8 +491,20 @@ namespace ISM6225_Fall_2023_Assignment_2
         {
             try
             {
-                // Write your code here and you can modify the return value according to the requirements
-                return new List<string>() { };
+                List<string> results = new List<string>();
+
+                for (int i = 0; i < currentState.Length - 1; i++)
+                {
+                    if (currentState[i] == '+' && currentState[i + 1] == '+')
+                    {
+                        char[] nextState = currentState.ToCharArray();
+                        nextState[i] = '-';
+                        nextState[i + 1] = '-';
+                        results.Add(new string(nextState));
+                    }
+                }
+
+                return results;
             }
             catch (Exception)
             {
@@ -383,8 +532,18 @@ namespace ISM6225_Fall_2023_Assignment_2
 
         public static string RemoveVowels(string s)
         {
-            // Write your code here and you can modify the return value according to the requirements
-            return "";
+            string vowels = "aeiouAEIOU";
+            StringBuilder result = new StringBuilder();
+
+            foreach (char c in s)
+            {
+                if (!vowels.Contains(c))
+                {
+                    result.Append(c);
+                }
+            }
+
+            return result.ToString();
         }
 
         /* Inbuilt Functions - Don't Change the below functions */
